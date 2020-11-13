@@ -27,21 +27,46 @@ height: 50px;
 	box-shadow: 0px 0px 30px #fff;
 
 }
+
+#cartbar img{
+	height:20%;
+}
 </style>
 </head>
 <body>
 <div id="header" style="background-color:#2F3136;">
 <table style="width: 100%; height: 90%; text-align: center;" >
 <td style="width: 50%;">IZZ Bookstore</td>
-<td><input type="text" placeholder="Username/Email"></td>
-<td><input type="text" placeholder="Password"></td>
+<td><input id="email" type="text" placeholder="Username/Email"><input id="pw" type="text" placeholder="Password"><a id='login'></a>
+<img id="cart" src="cart.png" style="position: absolute;display: none;width: 5px;float:right;right:5%"></img>&nbsp;&nbsp;&nbsp;&nbsp;</td></td>
 </table>
 </div>
-<div style="    position: fixed;align-items: center;align-content: center; width:300px;right:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;" id="sidebar">
+<div id="cartbar" style="position: fixed;align-items: center;align-content: center; width:300px;right:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
+	<br>
+	<br>
+	<br>
+
+	<h1>
+Your Shopping cart
+</h1>
+<table id="cartable">
+<tr>
+<td style="width:10%;"></td>
+<td></td>
+<td></td>
+
+</tr>
+
+
+</table>
+
+<h1 id="sum" style="float:right">$0.00</h1>
+</div>
+<div  id="sidebar" style="    position: fixed;align-items: center;align-content: center; width:300px;left:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
 <br><br><br><br>
-<button onclick="w3_close()" style="float: right;">Close &times;</button>
+<button onclick="w3_close()">Close &times;</button>
 <br>
-<img id="sideimg" src="9789887897248.png" style="width: 90%;  margin-left: auto;margin-right: auto;display: block;">
+<img src="9789887897248.png" style="width: 90%;  margin-left: auto;margin-right: auto;display: block;">
 <h1 id="title">Book Title</h1>
 <table>
 <tr>
@@ -56,10 +81,18 @@ height: 50px;
 <td>Publisher</td>
 <td><a id="publisher">-</a></td>
 </tr>
+<tr>
+<td>Price</td>
+<td>$<a id="price">-</a></td>
+</tr>
 </table>
 <a id="desciption">-</a>
 <br>
-<button>Add to Shopping Cart</button>
+<td><a id="publisher">-</a></td>
+
+
+<button onclick="addcart()">Add to Shopping Cart</button>
+
 <br>
 <img style="width: 7%;" src="fav.png"></img>
 </div>
@@ -72,21 +105,56 @@ height: 50px;
 </body>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
+var sum=parseFloat(0);
 var libary=[
-['9789887897248','本地生活寫作：想像與實踐','athor','19/6/2019','香港教育大學','本書結合香港教育大學，香港浸會大學寫作課程的教材及實踐成果，箕踞學科理論及教學法分析，也有學生課業示例及導師講評，切合香港以前華語地區大、中學界的教育需要；書中收錄青年人文章，尤能反映香港新一代的生活體驗和心靈世界。']
-,['2986913276897','','','','','']
-,['4542071718697','','','','','']
-,['3030075532532','','','','','']
-,['6401046984873','','','','','']
-,['4123282192673','','','','','']
-,['0342983591278','','','','','']
-,['0342983591279','','','','','']
+['9789887897248','本地生活寫作：想像與實踐','athor','19/6/2019','香港教育大學','本書結合香港教育大學，香港浸會大學寫作課程的教材及實踐成果，箕踞學科理論及教學法分析，也有學生課業示例及導師講評，切合香港以前華語地區大、中學界的教育需要；書中收錄青年人文章，尤能反映香港新一代的生活體驗和心靈世界。',10]
+,['2986913276897','-','-','-','-','-','-']
+,['4542071718697','-','-','-','-','-','-']
+,['3030075532532','-','-','-','-','-','-']
+,['6401046984873','-','-','-','-','-','-']
+,['4123282192673','-','-','-','-','-','-']
+,['0342983591278','-','-','-','-','-','-']
+,['0342983591279','-','-','-','-','-','-']
+]
+var users=[
+['a@gmail.com','1']
+,['b@gmail.com','2']
+,['c@gmail.com','3']
 ]
 $( document ).ready(function() {
-	for (i = 0; i < 15; i++) {
+	for (i = 0; i < 20; i++) {
 $('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.length)][0]+'.png" />')
 }
+
+
+$("#email").val("a@gmail.com");
+$("#pw").val("1");
+
 });
+$("#cart").click(function(){
+	$("#cartbar").toggle();
+})
+$('input').keypress(async function (e) {
+  if (e.which == 13) {
+	for(var user=0; user<=users.length;user++){
+		if(users[user][0]==$("#email").val() &&users[user][1]==$("#pw").val()){
+			$("#email").hide();
+			$("#pw").hide();
+			$("#login").html("Login success").fadeIn(300).delay(1000).fadeOut(300);
+			setTimeout(function(){ $("#login").html($("#email").val());
+			$("#login").fadeIn(300);
+			$('#cart').fadeIn(300);}, 3000);
+
+			break;
+		}
+	}
+	if (user==user.length){
+		$("login").html("Login failed");
+	}
+    return false;
+  }
+});
+
 
 $(window).scroll(function () {
 var i=0
@@ -96,14 +164,15 @@ $('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.lengt
 }
 }
 });
-$('body').on('click','img',function(){
+$('body').on('click','#gallery img',function(){
 	document.getElementById("sidebar").style.display = "block";
-	$("#sideimg").attr("src",$(this).attr("src"));
+	$("#sidebar img").attr("src",$(this).attr("src"));
 	$("#title").html('-')
 			$("#author").html('-')
 			$("#date").html('-')
 			$("#publisher").html('-')
 			$("#desciption").html('-')
+			$("#price").html('-')
 	for(var book=0; book<libary.length;book++){
 		if (libary[book][0]==$(this).attr("src").slice(0,-4)){
 			$("#title").html(libary[book][1])
@@ -111,12 +180,15 @@ $('body').on('click','img',function(){
 			$("#date").html(libary[book][3])
 			$("#publisher").html(libary[book][4])
 			$("#desciption").html(libary[book][5])
+			$("#price").html(libary[book][6])
 	}
 	}
-
-
 })
-
+function addcart(){
+	$("#cartbar table").append('<tr><td><img src='+$("#sidebar img").attr("src")+'></td><td>'+$("#title").html()+'</td><td>'+$("#price").html()+'</td></tr>')
+	sum=parseFloat($("#price").html())+parseFloat(sum);
+	$("#sum").html('$'+sum);
+}
 
 function w3_close() {
   document.getElementById("sidebar").style.display = "none";
