@@ -18,12 +18,12 @@ color:white;
 z-index: 3;
 height: 50px;
 }
-img{
+#gallery img{
 	width:15%;
 	margin-right: 20px;
 	margin-bottom: 20px;
 }
-img:hover{
+#gallery img:hover{
 	box-shadow: 0px 0px 30px #fff;
 
 }
@@ -37,36 +37,89 @@ img:hover{
 <td><input type="text" placeholder="Password"></td>
 </table>
 </div>
+<div style="    position: fixed;align-items: center;align-content: center; width:300px;right:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;" id="sidebar">
+<br><br><br><br>
+<button onclick="w3_close()" style="float: right;">Close &times;</button>
+<br>
+<img id="sideimg" src="9789887897248.png" style="width: 90%;  margin-left: auto;margin-right: auto;display: block;">
+<h1 id="title">Book Title</h1>
+<table>
+<tr>
+<td style="width: 100px;">Author</td>
+<td><a id="author">-</a></td>
+</tr>
+<tr>
+<td>Release date</td>
+<td><a id="date">-</a></td>
+</tr>
+<tr>
+<td>Publisher</td>
+<td><a id="publisher">-</a></td>
+</tr>
+</table>
+<a id="desciption">-</a>
+<br>
+<button>Add to Shopping Cart</button>
+<br>
+<img style="width: 7%;" src="fav.png"></img>
+</div>
+</div>
 <div id="gallery">
 <br><br><br>
-<img src="book0.png">
-<img src="book1.png">
-<img src="book2.png">
-<img src="book3.png">
-<img src="book4.png">
-<img src="book5.png">
-<img src="book6.png">
-<img src="book0.png">
-<img src="book1.png">
-<img src="book2.png">
-<img src="book3.png">
-<img src="book4.png">
-<img src="book5.png">
-<img src="book6.png">
+<img src="9789887897248.png">
+
 </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
-$(window).scroll(function () {
-	var i=0
-   if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
-	for (i = 0; i < 10; i++) {
-	$('#gallery').append('<img src="book'+Math.floor(Math.random() * 7)+'.png" />')
+var libary=[
+['9789887897248','本地生活寫作：想像與實踐','athor','19/6/2019','香港教育大學','本書結合香港教育大學，香港浸會大學寫作課程的教材及實踐成果，箕踞學科理論及教學法分析，也有學生課業示例及導師講評，切合香港以前華語地區大、中學界的教育需要；書中收錄青年人文章，尤能反映香港新一代的生活體驗和心靈世界。']
+,['2986913276897','','','','','']
+,['4542071718697','','','','','']
+,['3030075532532','','','','','']
+,['6401046984873','','','','','']
+,['4123282192673','','','','','']
+,['0342983591278','','','','','']
+,['0342983591279','','','','','']
+]
+$( document ).ready(function() {
+	for (i = 0; i < 15; i++) {
+$('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.length)][0]+'.png" />')
 }
-
-   }
 });
-//$("img" ).click(function() {
 
+$(window).scroll(function () {
+var i=0
+if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+for (i = 0; i < 10; i++) {
+$('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.length)][0]+'.png" />')
+}
+}
+});
+$('body').on('click','img',function(){
+	document.getElementById("sidebar").style.display = "block";
+	$("#sideimg").attr("src",$(this).attr("src"));
+	$("#title").html('-')
+			$("#author").html('-')
+			$("#date").html('-')
+			$("#publisher").html('-')
+			$("#desciption").html('-')
+	for(var book=0; book<libary.length;book++){
+		if (libary[book][0]==$(this).attr("src").slice(0,-4)){
+			$("#title").html(libary[book][1])
+			$("#author").html(libary[book][2])
+			$("#date").html(libary[book][3])
+			$("#publisher").html(libary[book][4])
+			$("#desciption").html(libary[book][5])
+	}
+	}
+
+
+})
+
+
+function w3_close() {
+  document.getElementById("sidebar").style.display = "none";
+}
 </script>
 </html>
