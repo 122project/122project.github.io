@@ -19,7 +19,7 @@ z-index: 3;
 height: 50px;
 }
 img{
-	width:25%;
+	width:15%;
 	margin-right: 20px;
 	margin-bottom: 20px;
 }
@@ -46,19 +46,27 @@ img:hover{
 <img src="book4.png">
 <img src="book5.png">
 <img src="book6.png">
-
+<img src="book0.png">
+<img src="book1.png">
+<img src="book2.png">
+<img src="book3.png">
+<img src="book4.png">
+<img src="book5.png">
+<img src="book6.png">
 </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
 $(window).scroll(function () {
+	var i=0
    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+	for (i = 0; i < 10; i++) {
 	$('#gallery').append('<img src="book'+Math.floor(Math.random() * 7)+'.png" />')
-	$('#gallery').append('<img src="book'+Math.floor(Math.random() * 7)+'.png" />')
-	$('#gallery').append('<img src="book'+Math.floor(Math.random() * 7)+'.png" />')
-	console.log(Math.floor(Math.random() * 7))
+}
 
    }
 });
+//$("img" ).click(function() {
+
 </script>
 </html>
