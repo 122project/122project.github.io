@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>IZZ Bookstore</title>
-<!--<link rel="icon" href="zak.png">-->
+<link rel="icon" href="logo.png">
 <style>
 body{
 color:white;
@@ -16,7 +16,7 @@ position: fixed;
 width: 100%;
 color:white;
 z-index: 3;
-height: 50px;
+height: 70px;
 }
 #gallery img{
 	width:15%;
@@ -38,9 +38,12 @@ height: 50px;
 <body>
 <div id="header" style="background-color:#2F3136;">
 <table style="width: 100%; height: 90%; text-align: center;" >
-<td style="width: 50%;">IZZ Bookstore</td>
+<td style="width: 50%;"><h1><img src="logo.png" style="width: 7%;top: 0px;"></img>Bookstore</h1></td>
 <td><input id="email" type="text" placeholder="Username/Email"><input id="pw" type="text" placeholder="Password"><a id='login'></a>
-<img id="cart" src="cart.png" style=" absolute;display: none;width: 15px;float:right;right:5%"></img>&nbsp;&nbsp;&nbsp;&nbsp;</td></td>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="cart" src="cart.png" style="position:absolute;display: none;width: 20px;right:20%"></img>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id ="headerfav" src="fav.png" style="position: absolute; display: none;width:20px;float:right;"></img>
+</td></td>
+
 </table>
 </div>
 <div id="cartbar" style="overflow-x:scroll;position: fixed;align-items: center;align-content: center; width:300px;right:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
@@ -156,7 +159,8 @@ $('input').keypress(async function (e) {
 			$("#login").html("Login success").fadeIn(300).delay(1000).fadeOut(300);
 			setTimeout(function(){ $("#login").html($("#email").val());
 			$("#login").fadeIn(300);
-			$('#cart').fadeIn(300);}, 3000);
+			$('#cart').fadeIn(300);
+			$("#headerfav").fadeIn(300)}, 3000);
 
 			break;
 		}
