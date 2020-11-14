@@ -14,7 +14,7 @@ background-color:#36393F;
 #header {
 position: fixed;
 width: 100%;
-color:white;
+color:white;d
 z-index: 3;
 height: 70px;
 }
@@ -31,26 +31,45 @@ height: 70px;
 	height:20%;
 	overflow-y: scroll;
 }
+#userpage{
+	text-align: center;
+	align-items: center;
+}
 
 
 </style>
 </head>
 <body>
 <div id="header" style="background-color:#2F3136;">
-<table style="width: 100%; height: 90%; text-align: center;" >
+<table style="width: 100%; height: 90%; text-align: center;">
 <td style="width: 50%;"><h1><img src="logo.png" style="width: 7%;top: 0px;"></img>Bookstore</h1></td>
-<td><input id="email" type="text" placeholder="Username/Email"><input id="pw" type="text" placeholder="Password"><a id='login'></a>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="cart" src="cart.png" style="position:absolute;display: none;width: 20px;right:20%"></img>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id ="headerfav" src="fav.png" style="position: absolute; display: none;width:20px;float:right;"></img>
+<td><input id="email" type="email" placeholder="Username/Email"><input id="pw" type="password" placeholder="Password">
+<img id="user" src="user.png" style="width:7%"></img>
+<a id='login'></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="cart" src="cart.png" style="position:absolute;display: none;width: 20px;right:20%"></img>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id ="headerfav" src="fav.png" style="position: absolute; display: none;width:20px;float:right;"></img>
 </td></td>
 
 </table>
+</div>
+<div id="userpage" style="width:100%;height:100%;display: none;top:45%;position: absolute;">
+<h1>Create account</h1>
+<input id="email" type="email" placeholder="Email">
+<br>
+<input id="email" type="password" placeholder="Password">
+<br>
+<input id="email" type="password" placeholder="Confirm Password">
+
+
+
+
+
+
 </div>
 <div id="cartbar" style="overflow-x:scroll;position: fixed;align-items: center;align-content: center; width:300px;right:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
 	<br>
 	<br>
 	<br>
-
 	<h1>
 Your Shopping cart
 </h1>
@@ -59,10 +78,7 @@ Your Shopping cart
 <td style="width:10%;"></td>
 <td></td>
 <td></td>
-
 </tr>
-
-
 </table>
 
 <h1 id="sum" style=" float:right; bottom: 10%;">$0.00</h1>
@@ -149,6 +165,10 @@ $("#pw").val("1");
 });
 $("#cart").click(function(){
 	$("#cartbar").toggle();
+})
+$("#user").click(function(){
+	$("#userpage").toggle();
+	$("#gallery").toggle();
 })
 $('input').keypress(async function (e) {
   if (e.which == 13) {
