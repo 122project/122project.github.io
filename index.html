@@ -17,9 +17,23 @@ width: 100%;
 color:white;d
 z-index: 3;
 height: 70px;
+
+}
+#gallery{
+	z-index: -1;
+	position: absolute;
+	margin: auto;
+width: 80%;
+top:-18%;
+padding: 15%;
+
+}
+body{
+	overflow-x:hidden;
+
 }
 #gallery img{
-	width:15%;
+	width:13%;
 	margin-right: 20px;
 	margin-bottom: 20px;
 }
@@ -34,6 +48,10 @@ height: 70px;
 #userpage{
 	text-align: center;
 	align-items: center;
+}
+#cartbar{
+	z-index: 0;
+	overflow-x: hidden;
 }
 
 
@@ -53,7 +71,7 @@ height: 70px;
 
 </table>
 </div>
-<div id="userpage" style="width:100%;height:100%;display: none;top:45%;position: absolute;">
+<div id="userpage" style="width:100%;height:50%;display: none;top:35%;position: absolute;overflow-y: hidden;">
 <h1>Create account</h1>
 <input id="email" type="email" placeholder="Email">
 <br>
@@ -61,7 +79,6 @@ height: 70px;
 <br>
 <input id="email" type="password" placeholder="Confirm Password">
 <br>
-<!--
 <select id="gender">
 <option value="">Gender (Optional)</option>
 <option value="Male">Male</option>
@@ -69,7 +86,13 @@ height: 70px;
 <option value="Others">Others</option>
 </select>
 <br>
--->
+<input id="date" type="date" placeholder="Birthday (Optional)">
+<br>
+<input id="address" type="text" placeholder="Address (Optional)">
+<br>
+<br>
+<button>Create account</button>
+
 
 
 </div>
@@ -128,7 +151,6 @@ Your Shopping cart
 </div>
 </div>
 <div id="gallery">
-<br><br><br>
 <img src="9789887897248.png">
 
 </div>
@@ -148,12 +170,24 @@ var libary=[
 ,70]
 ,['9789628326891','四代香港人','呂大樂','2019','進一步多媒體有限公司','香港有四代人，生長於戰前的是第一代，依次直推至1990年誕生的第四代。呂大樂以精闢的透析力和高度的概括力，道出四代人的精神面貌，並令人不無警惕地指出，在安分寬容的第一代陸續退下舞台之際，「戰後嬰兒」卻未能為下一代提供更開放、更公平的環境，以致第三代人深感出頭無期，而第四代人打從開始便是輸家。'
 ,'50']
-,['9780195495683','唔該，埋單──一個社會學家的香港筆記','呂大樂','2018','牛津大學出版社(中國)有限公司','本書分為兩個主要部分：前部分是《唔該，埋單》的原稿，後面新寫了一則後記〈有落，後數〉，作為對「後九七」的補充。一如以往，這是一份筆記。作者承認回歸十年所發生的很多事情，是大部分香港人始料未及的。如果九七前的香港故事不易講，那麼九七後的香港故事不知從何說起。'
-,70]
-,['9789628885329','給大學生的16封鼓勵信','小思,余少華,呂大樂','2017','中華書局(香港)有限公司','我們的大學生雖然生活在科技發達、物質豐盛的二十一世紀，但在成長路上遇到的困難、逆境與挫折比我們年輕時多，解決問題的能力和承受挫敗的能耐卻減低了。 '
-,'40']
 ,['9789863611684','富爸爸理財IQ－－愈精明，愈有錢','羅勃特‧T‧清崎','2017','英屬維京群島商高寶國際有限公司台灣分公司','目前人們最大的恐慌不是恐怖主義，而是擔心退休時錢花光了！窮人沒努力提高自己的理財IQ，那才是窮人之所以窮的原因。有錢人越來越有錢，是因為他們精明地摳緊「稅與預算」。'
 ,'120']
+,['9789865113612','適合市民跑者的100日馬拉松訓練計畫','	金哲彥','2018','台灣東販股份有限公司','任何人都能更輕鬆、更安全地締造自己的新紀錄！由深受奧運選手信賴的專業教練金哲彥所帶來的最終版馬拉松訓練計畫！'
+,'110']
+,['9781529411690','Lockdown','Peter May','2020','Riverrun','Written over fifteen years ago, this prescient, suspenseful thriller is set against a backdrop of a capital city in quarantine, and explores human experience in the grip of a killer virus.'
+,'130']
+,['9789888675630','不過就是待在家？家庭主婦比你想像的更崩潰！','河內瞬','2019','非凡出版','女生要看！男生必讀！一個家庭主夫的自白，揭露家庭主婦之苦！'
+,'90']
+,['9789570855029','金錢2.0','佐藤航陽','2018','	聯經出版事業股份有限公司','新經濟體系下的生存之道！金融科技時代中你一定要具備的知識！'
+,'120']
+,['9789628326594','中產好痛','呂大樂','2018','進一步多媒體有限公司','中產作為香港社會的支柱，「九七」回歸後遭受了長達七年的打擊。甫回歸即遇上亞洲金融危機，戳破了地產泡沫，加上內地經濟崛起構成競爭，中產不但手頭的資產變成「負資產」，連薪高糧準的職業保障也不保。'
+,'80']
+,['9789888526710','六毫子60句沒用的說話','六毫子','2019','明窗出版社','微辣創辦人及CEO六毫子首次公開對自己深有影響的60句沒用的說話。這些「廢話」，如何成就今天的微辣與六毫子？'
+,'100']
+,['9781119457893','Beginning Programming With Python for Dummies','','','',''
+,'200']
+,['9781780724614','Covid-19: What you need to know about the Coronavirus and the race for the vaccine','','','',''
+,'100']
 ]
 var users=[
 ['a@gmail.com','1']
@@ -166,8 +200,8 @@ $('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.lengt
 }
 
 
-$("#email").val("a@gmail.com");
-$("#pw").val("1");
+//$("#email").val("a@gmail.com");
+//$("#pw").val("1");
 
 });
 $("#cart").click(function(){
