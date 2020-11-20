@@ -4,6 +4,7 @@
 <title>IZZ Bookstore</title>
 <link rel="icon" href="logo.png">
 <style>
+
 body{
 color:white;
 position:static !important;
@@ -15,22 +16,21 @@ background-color:#36393F;
 position: fixed;
 width: 100%;
 color:white;d
-z-index: 3;
-height: 70px;
+z-index: 100;
+height: 120px;
 
 }
 #gallery{
-	z-index: -1;
+	z-index: -2;
 	position: absolute;
 	margin: auto;
 width: 80%;
-top:-18%;
-padding: 15%;
-
+top:13%;
+padding-right: 15%;
+padding-left:15%
 }
 body{
 	overflow-x:hidden;
-
 }
 #gallery img{
 	width:13%;
@@ -40,18 +40,39 @@ body{
 #gallery img:hover{
 	box-shadow: 0px 0px 30px #fff;
 }
-
+#cartbar{
+	z-index:-1;
+	overflow-x: hidden;
+	padding-top: 5%;
+	padding-right: 1%;
+	padding-left:1%
+}
 #cartbar img{
 	height:20%;
 	overflow-y: scroll;
 }
-#userpage{
+#create{
 	text-align: center;
 	align-items: center;
+	width:100%;
+	height:50%;display: none;
+	top:35%;
+	position: absolute;
+	overflow-y: hidden;
 }
-#cartbar{
-	z-index: 0;
-	overflow-x: hidden;
+#displayaccount{
+	text-align: center;
+	align-items: center;
+	width:100%;
+	height:50%;
+	display: none;
+	top:35%;
+	position: absolute;
+	overflow-y: hidden;
+}
+#displayaccount table{
+	margin-left:auto;
+    margin-right:auto;
 }
 
 
@@ -61,23 +82,29 @@ body{
 <body>
 <div id="header" style="background-color:#2F3136;">
 <table style="width: 100%; height: 90%; text-align: center;">
+<tr>
 <td style="width: 50%;"><h1><img src="logo.png" style="width: 30px;top: 0px;"></img>Bookstore</h1></td>
-<td><input id="email" type="email" placeholder="Username/Email"><input id="pw" type="password" placeholder="Password">
+<td><input class="login" id="email" type="email" placeholder="Email"><input class="login" id="pw" type="password" placeholder="Password">
 <img id="user" src="user.png" style="width:30px"></img>
 <a id='login'></a>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="cart" src="cart.png" style="position:absolute;display: none;width: 20px;right:20%"></img>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id ="headerfav" src="fav.png" style="position: absolute; display: none;width:20px;float:right;"></img>
-</td></td>
-
+</td>
+</tr>
+<tr>
+	<td  colspan="2">
+<input class="search" type="text" size="80%" placeholder="Search books..." onkeyup="search()" >
+</td>
+</tr>
 </table>
 </div>
-<div id="userpage" style="width:100%;height:50%;display: none;top:35%;position: absolute;overflow-y: hidden;">
+<div id="create">
 <h1>Create account</h1>
-<input id="email" type="email" placeholder="Email">
+<input id="createemail" type="email" placeholder="Email">
 <br>
-<input id="email" type="password" placeholder="Password">
+<input id="pswd" type="password" placeholder="Password">
 <br>
-<input id="email" type="password" placeholder="Confirm Password">
+<input id="cpswd" type="password" placeholder="Confirm Password">
 <br>
 <select id="gender">
 <option value="">Gender (Optional)</option>
@@ -86,16 +113,24 @@ body{
 <option value="Others">Others</option>
 </select>
 <br>
-<input id="date" type="date" placeholder="Birthday (Optional)">
+<input id="birth" type="date" placeholder="Birthday (Optional)">
 <br>
 <input id="address" type="text" placeholder="Address (Optional)">
 <br>
 <br>
-<button>Create account</button>
-
-
+<button id="createaccount">Create account</button>
+<br>
+<a id="err"></a>
 
 </div>
+
+<div id="displayaccount" style="display: none;">
+	<h1>Account Info</h1>
+<table></table>
+<button>Logout</button>
+</div>
+
+
 <div id="cartbar" style="overflow-x:scroll;position: fixed;align-items: center;align-content: center; width:300px;right:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
 	<br>
 	<br>
@@ -151,12 +186,96 @@ Your Shopping cart
 </div>
 </div>
 <div id="gallery">
-<img src="9789887897248.png">
-
+<img src="9789887897248.png" alt="本地生活寫作：想像與實踐">
 </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
+//email pswd gender date address
+//var users=[
+//['a@gmail.com','1','','','']
+//,['b@gmail.com','2','','','']
+//,['c@gmail.com','3','','','']
+//]
+var userinfo;
+var db=openDatabase("users","1.0","users",65535);
+function search() {
+  if ($(".search").val()==""){$("#gallery img").show();}else{
+  $("#gallery img").each(function(index){
+	  if ($(this).attr('alt').toLowerCase().indexOf($(".search").val().toLowerCase()) >-1 && $(this).css('display') == 'none') {
+	  $(this).show();
+    } else {
+	$(this).hide();
+    }
+  })}
+}
+$(function(){
+loadData();
+//to insert
+$("#createaccount").click(function(){
+	if ($("#pswd").val()==$("#cpswd").val()){
+var email=$("#createemail").val();
+var pswd=$("#pswd").val();
+if ($("gender").val()){
+var gender=$("gender").val();
+}else{var gender='';}
+if ($("birth").val()){
+var birth=$("birth").val();
+}else{var birth='';}
+if ($("address").val()){
+var address=$("address").val();
+}else{var address='';}
+db.transaction(function(transaction){
+transaction.executeSql("INSERT INTO users(email,pswd,gender,birth,address) VALUES(?,?,?,?,?)",[email,pswd,gender,birth,address],function(){
+console.log("New item is added successfully");
+},function(transaction,err){
+console.log(err.message);
+})})
+loadData($("#createemail").val(),callbacker);
+$("#create").hide();
+$("#displayaccount").show();
+	}else{
+	$("#err").html('Wrong Pswd')
+	$("#err").fadeOut(300)
+}
+})
+
+
+
+
+function callbacker(callback){
+console.log(callback);
+window.userinfo=callback;
+$("#displayaccount table").append('<tr><td>Email</td><td>'+callback[0]+'</td></tr><tr><td>Password</td><td>'+callback[1]+
+	'</td></tr><tr><td>Gender</td><td>'+callback[2]+'</td></tr><tr><td>Birthday</td><td>'+callback[3]+
+	'</td></tr><tr><td>Address</td><td>'+callback[4]+'</td></tr>');
+	$("#email").hide();
+	$("#pw").hide();
+	$("#login").html("Login success").fadeIn(300).delay(1000).fadeOut(300);
+	setTimeout(function(){ $("#login").html(callback[0]);
+	$("#login").fadeIn(300);
+	$('#cart').fadeIn(300);
+	$("#headerfav").fadeIn(300)}, 3000);
+}
+
+function loadData(email,callback){
+db.transaction(function(transaction){
+if(email){var sql="SELECT * FROM users WHERE email='"+email+"'"
+}else{var sql="SELECT * FROM users"}
+transaction.executeSql(sql,undefined,function(transaction,result){
+if(result.rows.length){
+	var row=result.rows.item(0);
+	var email=row.email;
+	var pswd=row.pswd;
+	var gender=row.gender;
+	var birth=row.birth;
+	var address=row.address;
+	console.log(email,pswd,gender,birth,address);
+	callback([email,pswd,gender,birth,address]);
+}},function(transaction,err){
+console.log('No table found. Click on "Create Table" to create table now');
+})})}
+
 var sum=parseFloat(0);
 //isbn title author date pulisher description price
 var libary=[
@@ -189,51 +308,43 @@ var libary=[
 ,['9781780724614','Covid-19: What you need to know about the Coronavirus and the race for the vaccine','','','',''
 ,'100']
 ]
-var users=[
-['a@gmail.com','1']
-,['b@gmail.com','2']
-,['c@gmail.com','3']
-]
-$( document ).ready(function() {
-	for (i = 0; i < 50; i++) {
-$('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.length)][0]+'.png" />')
+
+$( document ).ready(function(){
+for(i=0;i<50;i++) {
+	var rand=Math.floor(Math.random() * libary.length)
+$('#gallery').append('<img src="'+libary[rand][0]+'.png" alt="'+libary[rand][1]+'">')
 }
 
-
+db.transaction(function(transaction){
+var sql="CREATE TABLE users "+
+"(email VARCHAR(100) NOT NULL PRIMARY KEY AUTOINCREMENT,"+
+"pswd VARCHAR(100) NOT NULL,"+
+"gender VARCHAR(1),"+
+"birth VARCHAR(10),"+
+"address VARCHAR(100),";
+transaction.executeSql(sql,undefined,function(){},function(){})
+});
 //$("#email").val("a@gmail.com");
 //$("#pw").val("1");
-
 });
+$("#displayaccount button").click(function(){
+location.reload()})
 $("#cart").click(function(){
-	$("#cartbar").toggle();
+$("#cartbar").toggle();
 })
 $("#user").click(function(){
-	$("#userpage").toggle();
-	$("#gallery").toggle();
+if(window.userinfo){
+$("#displayaccount").toggle();
+}else{
+$("#create").toggle();
+}
+$("#gallery").toggle();
 })
-$('input').keypress(async function (e) {
-  if (e.which == 13) {
-	for(var user=0; user<=users.length;user++){
-		if(users[user][0]==$("#email").val() &&users[user][1]==$("#pw").val()){
-			$("#email").hide();
-			$("#pw").hide();
-			$("#login").html("Login success").fadeIn(300).delay(1000).fadeOut(300);
-			setTimeout(function(){ $("#login").html($("#email").val());
-			$("#login").fadeIn(300);
-			$('#cart').fadeIn(300);
-			$("#headerfav").fadeIn(300)}, 3000);
-
-			break;
-		}
-	}
-	if (user==user.length){
-		$("login").html("Login failed");
-	}
-    return false;
+$('.login input').keypress(async function (e) {
+if(e.which==13){
+loadData($("#createemail").val(),callbacker);
   }
 });
-
-
 $(window).scroll(function () {
 var i=0
 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
@@ -271,5 +382,6 @@ function addcart(){
 function w3_close() {
   document.getElementById("sidebar").style.display = "none";
 }
+})
 </script>
 </html>
