@@ -1,105 +1,400 @@
 <!DOCTYPE html>
 <html>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<body style="margin:30px">
-<div class="container">
-<div class="row">
-<form>
-	<fieldset>
-		<legend>Item Name</legend>
-		<input type="text" class="form-control" name="" id="item">
-		<legend>Quantity</legend>
-		<input type="number" class="form-control" id="quantity" name="">
-<br>
-<button type="button" id="insert" class="btn btn-success">Insert</button>
-<button type="button" id="create" class="btn btn-success">Create Table</button>
-<button type="button" id="remove" class="btn btn-danger">Delete Table</button>
-<button type="button" id="list" class="btn btn-success">Fetch Record</button>
-	</fieldset>
-</form>
-<hr>
-<h4>Record</h4>
-<table class="table table-bordered table-hover" id="itemlist">
+<head>
+<title>IZZ Bookstore</title>
+<link rel="icon" href="logo.png">
+<style>
+
+body{
+color:white;
+position:static !important;
+margin: 0;
+padding: 0;
+background-color:#36393F;
+}
+#header {
+position: fixed;
+width: 100%;
+color:white;d
+z-index: 3;
+height: 70px;
+
+}
+#gallery{
+	z-index: -1;
+	position: absolute;
+	margin: auto;
+width: 80%;
+top:-18%;
+padding: 15%;
+
+}
+body{
+	overflow-x:hidden;
+
+}
+#gallery img{
+	width:13%;
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
+#gallery img:hover{
+	box-shadow: 0px 0px 30px #fff;
+}
+
+#cartbar img{
+	height:20%;
+	overflow-y: scroll;
+}
+#create{
+	text-align: center;
+	align-items: center;
+	width:100%;
+	height:50%;display: none;
+	top:35%;
+	position: absolute;
+	overflow-y: hidden;
+}
+#displayaccount{
+	text-align: center;
+	align-items: center;
+	width:100%;
+	height:50%;
+	display: none;
+	top:35%;
+	position: absolute;
+	overflow-y: hidden;
+}
+#displayaccount table{
+	margin-left:auto;
+    margin-right:auto;
+}
+#cartbar{
+	z-index: 0;
+	overflow-x: hidden;
+}
+
+
+
+</style>
+</head>
+<body>
+<div id="header" style="background-color:#2F3136;">
+<table style="width: 100%; height: 90%; text-align: center;">
+<td style="width: 50%;"><h1><img src="logo.png" style="width: 30px;top: 0px;"></img>Bookstore</h1></td>
+<td><input id="email" type="email" placeholder="Email"><input id="pw" type="password" placeholder="Password">
+<img id="user" src="user.png" style="width:30px"></img>
+<a id='login'></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="cart" src="cart.png" style="position:absolute;display: none;width: 20px;right:20%"></img>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id ="headerfav" src="fav.png" style="position: absolute; display: none;width:20px;float:right;"></img>
+</td></td>
+
 </table>
 </div>
+<div id="create">
+<h1>Create account</h1>
+<input id="createemail" type="email" placeholder="Email">
+<br>
+<input id="pswd" type="password" placeholder="Password">
+<br>
+<input id="cpswd" type="password" placeholder="Confirm Password">
+<br>
+<select id="gender">
+<option value="">Gender (Optional)</option>
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+<option value="Others">Others</option>
+</select>
+<br>
+<input id="birth" type="date" placeholder="Birthday (Optional)">
+<br>
+<input id="address" type="text" placeholder="Address (Optional)">
+<br>
+<br>
+<button id="createaccount">Create account</button>
+<br>
+<a id="err"></a>
+
 </div>
-<script type="text/javascript">
-var db=openDatabase("itemDB","1.0","itemDB",65535);
+
+
+
+
+
+
+
+
+
+
+<div id="displayaccount" style="display: none;">
+	<h1>Account Info</h1>
+<table></table>
+<button>Logout</button>
+</div>
+
+
+<div id="cartbar" style="overflow-x:scroll;position: fixed;align-items: center;align-content: center; width:300px;right:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
+	<br>
+	<br>
+	<br>
+	<h1>
+Your Shopping cart
+</h1>
+<table id="cartable">
+<tr>
+<td style="width:10%;"></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+<h1 id="sum" style=" float:right; bottom: 10%;">$0.00</h1>
+<button  style="bottom:8%;">Check out</button>
+
+</div>
+<div  id="sidebar" style="padding: 10px;    overflow-y: scroll;position: fixed;align-items: center;align-content: center; width:300px;left:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
+<br><br><br><br>
+<button onclick="w3_close()">Close &times;</button>
+<br>
+<img id="sideimg" src="9789887897248.png" style="width: 90%;  margin-left: auto;margin-right: auto;display: block;">
+<h1 id="title">Book Title</h1>
+<table>
+<tr>
+<td style="width: 100px;">Author</td>
+<td><a id="author">-</a></td>
+</tr>
+<tr>
+<td>Release date</td>
+<td><a id="date">-</a></td>
+</tr>
+<tr>
+<td>Publisher</td>
+<td><a id="publisher">-</a></td>
+</tr>
+<tr>
+<td>Price</td>
+<td>$<a id="price">-</a></td>
+</tr>
+</table>
+<a id="desciption">-</a>
+<br>
+<td><a id="publisher">-</a></td>
+
+
+<button onclick="addcart()">Add to Shopping Cart</button>
+
+<br>
+<img style="width: 7%;" src="fav.png"></img>
+</div>
+</div>
+<div id="gallery">
+<img src="9789887897248.png">
+
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script>
+//email pswd gender date address
+//var users=[
+//['a@gmail.com','1','','','']
+//,['b@gmail.com','2','','','']
+//,['c@gmail.com','3','','','']
+//]
+var userinfo;
+
+var db=openDatabase("users","1.0","users",65535);
+
 $(function(){
 loadData();
-$("#create").click(function(){
+//to insert
+$("#createaccount").click(function(){
+	if ($("#pswd").val()==$("#cpswd").val()){
+var email=$("#createemail").val();
+var pswd=$("#pswd").val();
+if ($("gender").val()){
+var gender=$("gender").val();
+}else{var gender='';}
+if ($("birth").val()){
+var birth=$("birth").val();
+}else{var birth='';}
+if ($("address").val()){
+var address=$("address").val();
+}else{var address='';}
 db.transaction(function(transaction){
-	var sql="CREATE TABLE items "+
-	"(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"+
-	"item VARCHAR(100) NOT NULL,"+
-	"quantity INT(5) NOT NULL)";
+transaction.executeSql("INSERT INTO users(email,pswd,gender,birth,address) VALUES(?,?,?,?,?)",[email,pswd,gender,birth,address],function(){
+console.log("New item is added successfully");
+},function(transaction,err){
+console.log(err.message);
+})})
+loadData($("#createemail").val(),callbacker);
+$("#create").hide();
+$("#displayaccount").show();
+	}else{
+	$("#err").html('Wrong Pswd')
+	$("#err").fadeOut(300)
+}
+})
+function callbacker(callback){
+	console.log(callback);
+	window.userinfo=callback;
+$("#displayaccount table").append('<tr><td>Email</td><td>'+callback[0]+'</td></tr><tr><td>Password</td><td>'+callback[1]+
+	'</td></tr><tr><td>Gender</td><td>'+callback[2]+'</td></tr><tr><td>Birthday</td><td>'+callback[3]+
+	'</td></tr><tr><td>Address</td><td>'+callback[4]+'</td></tr>');
+
+	$("#email").hide();
+	$("#pw").hide();
+	$("#login").html("Login success").fadeIn(300).delay(1000).fadeOut(300);
+	setTimeout(function(){ $("#login").html(callback[0]);
+	$("#login").fadeIn(300);
+	$('#cart').fadeIn(300);
+	$("#headerfav").fadeIn(300)}, 3000);
+}
+
+
+function loadData(email,callback){
+db.transaction(function(transaction){
+if(email){	var sql="SELECT * FROM users WHERE email='"+email+"'"
+}else{var sql="SELECT * FROM users"}
+transaction.executeSql(sql,undefined,function(transaction,result){
+if(result.rows.length){
+	var row=result.rows.item(0);
+	var email=row.email;
+	var pswd=row.pswd;
+	var gender=row.gender;
+	var birth=row.birth;
+	var address=row.address;
+	console.log(email,pswd,gender,birth,address);
+	callback([email,pswd,gender,birth,address]);
+}},function(transaction,err){
+console.log('No table found. Click on "Create Table" to create table now');
+})})}})
+
+var sum=parseFloat(0);
+//isbn title author date pulisher description price
+var libary=[
+['9789887897248','本地生活寫作：想像與實踐','-','6/2019','香港教育大學','本書結合香港教育大學，香港浸會大學寫作課程的教材及實踐成果，箕踞學科理論及教學法分析，也有學生課業示例及導師講評，切合香港以前華語地區大、中學界的教育需要；書中收錄青年人文章，尤能反映香港新一代的生活體驗和心靈世界。'
+,80]
+,['9781982138868','Doctor Sleep','Stephen King','2019','Pocket Books','Doctor Sleep is a 2013 horror novel by American writer Stephen King and the sequel to his 1977 novel The Shining. The book reached the first position on The New York Times Best Seller list for print and ebook fiction (combined), hardcover fiction, and ebook fiction. Doctor Sleep won the 2013 Bram Stoker Award for Best Novel.The novel was adapted into a film of the same name, which was released on November 8, 2019 in the United States.'
+,250]
+,['9780525537090','How to: Absurd Scientific Advice for Common Real-World Problems','Munroe Randall','2019','Riverhead','ow To: Absurd Scientific Advice for Common Real-World Problems is a book by Randall Munroe in which the author provides absurd suggestions based in scientific fact on ways to solve some common and some absurd problems.The book contains a range of possible real-world and absurd problems, each the focus of a single chapter. The book was released on September 3, 2019.'
+,230]
+,['9781424559060','Best Sports Activity Book Ever','Broadstreet Publishing Group LLC','2019','Broadstreet Pub','Perfect for mini sportsfans and athletes, this fun activity and devotional book will keep kids entertained for hours. Activities include word finds, mazes, mini games, coloring pages, sketch starters, break-the-code puzzles, dots and boxes, spot the difference games, and more. Best of all, kids will find devotions written especially for them, and encouraging Scriptures to think about during the day. Have fun and be filled with joy as you spend time in this exciting activity book for kids! Heartfelt devotions for kids Encouraging Scriptures Inspiring prayers Word finds, mini games, mazes, sketch starters, puzzles, coloring pages, and more!'
+,70]
+,['9789628326891','四代香港人','呂大樂','2019','進一步多媒體有限公司','香港有四代人，生長於戰前的是第一代，依次直推至1990年誕生的第四代。呂大樂以精闢的透析力和高度的概括力，道出四代人的精神面貌，並令人不無警惕地指出，在安分寬容的第一代陸續退下舞台之際，「戰後嬰兒」卻未能為下一代提供更開放、更公平的環境，以致第三代人深感出頭無期，而第四代人打從開始便是輸家。'
+,'50']
+,['9789863611684','富爸爸理財IQ－－愈精明，愈有錢','羅勃特‧T‧清崎','2017','英屬維京群島商高寶國際有限公司台灣分公司','目前人們最大的恐慌不是恐怖主義，而是擔心退休時錢花光了！窮人沒努力提高自己的理財IQ，那才是窮人之所以窮的原因。有錢人越來越有錢，是因為他們精明地摳緊「稅與預算」。'
+,'120']
+,['9789865113612','適合市民跑者的100日馬拉松訓練計畫','	金哲彥','2018','台灣東販股份有限公司','任何人都能更輕鬆、更安全地締造自己的新紀錄！由深受奧運選手信賴的專業教練金哲彥所帶來的最終版馬拉松訓練計畫！'
+,'110']
+,['9781529411690','Lockdown','Peter May','2020','Riverrun','Written over fifteen years ago, this prescient, suspenseful thriller is set against a backdrop of a capital city in quarantine, and explores human experience in the grip of a killer virus.'
+,'130']
+,['9789888675630','不過就是待在家？家庭主婦比你想像的更崩潰！','河內瞬','2019','非凡出版','女生要看！男生必讀！一個家庭主夫的自白，揭露家庭主婦之苦！'
+,'90']
+,['9789570855029','金錢2.0','佐藤航陽','2018','	聯經出版事業股份有限公司','新經濟體系下的生存之道！金融科技時代中你一定要具備的知識！'
+,'120']
+,['9789628326594','中產好痛','呂大樂','2018','進一步多媒體有限公司','中產作為香港社會的支柱，「九七」回歸後遭受了長達七年的打擊。甫回歸即遇上亞洲金融危機，戳破了地產泡沫，加上內地經濟崛起構成競爭，中產不但手頭的資產變成「負資產」，連薪高糧準的職業保障也不保。'
+,'80']
+,['9789888526710','六毫子60句沒用的說話','六毫子','2019','明窗出版社','微辣創辦人及CEO六毫子首次公開對自己深有影響的60句沒用的說話。這些「廢話」，如何成就今天的微辣與六毫子？'
+,'100']
+,['9781119457893','Beginning Programming With Python for Dummies','','','',''
+,'200']
+,['9781780724614','Covid-19: What you need to know about the Coronavirus and the race for the vaccine','','','',''
+,'100']
+]
+
+$( document ).ready(function() {
+	for (i = 0; i < 50; i++) {
+$('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.length)][0]+'.png" />')
+}
+
+db.transaction(function(transaction){
+	var sql="CREATE TABLE users "+
+	"(email VARCHAR(100) NOT NULL PRIMARY KEY AUTOINCREMENT,"+
+	"pswd VARCHAR(100) NOT NULL,"+
+	"gender VARCHAR(1),"+
+	"birth VARCHAR(10),"+
+	"address VARCHAR(100),";
 	transaction.executeSql(sql,undefined,function(){},function(){})
 });
+//$("#email").val("a@gmail.com");
+//$("#pw").val("1");
+
 });
-// to remove
+$("#displayaccount button").click(function(){
+	location.reload()
+})
 
-$("#remove").click(function(){
 
-if(!confirm("Are you sure to delete this table?","")) return;;
-db.transaction(function(transaction){
-	var sql="DROP TABLE items";
-	transaction.executeSql(sql,undefined,function(){
-		alert("Table is deleted successfully")
-	},function(transaction,err){
-		alert(err.message);
-	})
+$("#cart").click(function(){
+	$("#cartbar").toggle();
+})
+$("#user").click(function(){
+	if (window.userinfo){
+		$("#displayaccount").toggle();
+	}else{
+		$("#create").toggle();
+	}
+	$("#gallery").toggle();
+
+})
+$('#header input').keypress(async function (e) {
+  if (e.which == 13) {
+	for(var user=0; user<=users.length;user++){
+		if(users[user][0]==$("#email").val() &&users[user][1]==$("#pw").val()){
+			$("#email").hide();
+			$("#pw").hide();
+			$("#login").html("Login success").fadeIn(300).delay(1000).fadeOut(300);
+			setTimeout(function(){ $("#login").html($("#email").val());
+			$("#login").fadeIn(300);
+			$('#cart').fadeIn(300);
+			$("#headerfav").fadeIn(300)}, 3000);
+			break;
+		}
+	}
+	if (user==user.length){
+		$("login").html("Login failed");
+	}
+    return false;
+  }
 });
+
+
+$(window).scroll(function () {
+var i=0
+if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+for (i = 0; i < 10; i++) {
+$('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.length)][0]+'.png" />')
+}
+}
 });
-
-//to insert
-
-$("#insert").click(function(){
-var item=$("#item").val();
-var qty=$("#quantity").val();
-db.transaction(function(transaction){
-var sql="INSERT INTO items(item,quantity) VALUES(?,?)";
-transaction.executeSql(sql,[item,qty],function(){
-	alert("New item is added successfully");
-},function(transaction,err){
-	alert(err.message);
+$('body').on('click','#gallery img',function(){
+	document.getElementById("sidebar").style.display = "block";
+	$("#sideimg").attr("src",$(this).attr("src"));
+	$("#title").html('-')
+			$("#author").html('-')
+			$("#date").html('-')
+			$("#publisher").html('-')
+			$("#desciption").html('-')
+			$("#price").html('-')
+	for(var book=0; book<libary.length;book++){
+		if (libary[book][0]==$(this).attr("src").slice(0,-4)){
+			$("#title").html(libary[book][1])
+			$("#author").html(libary[book][2])
+			$("#date").html(libary[book][3])
+			$("#publisher").html(libary[book][4])
+			$("#desciption").html(libary[book][5])
+			$("#price").html(libary[book][6])
+	}
+	}
 })
-})
-
-})
-
-
-//to fetch
-
-$("#list").click(function(){
-loadData();
-})
-
-function loadData(){
-		$("#itemlist").children().remove();
-	db.transaction(function(transaction){
-		var sql="SELECT * FROM items ORDER BY id DESC";
-		transaction.executeSql(sql,undefined,function(transaction,result){
-if(result.rows.length){
-
-for(var i=0;i<result.rows.length;i++){
-	var row=result.rows.item(i);
-	var item=row.item;
-	var id=row.id;
-	var quantity=row.quantity;
-	$("#itemlist").append('<tr><td>'+item+'</td><td>'+quantity+'</td></tr>');
-}
-}else{
-	$("#itemlist").append('<tr><td colspan="3" align="center">No Item Found</td></tr>');
+function addcart(){
+	$("#cartbar table").append('<tr><td><img src='+$("#sideimg").attr("src")+'></td><td>'+$("#title").html()+'</td><td>'+$("#price").html()+'</td></tr>')
+	sum=parseFloat($("#price").html())+parseFloat(sum);
+	$("#sum").html('$'+sum);
 }
 
-
-		},function(transaction,err){
-			alert('No table found. Click on "Create Table" to create table now');
-		})
-	})
+function w3_close() {
+  document.getElementById("sidebar").style.display = "none";
 }
-
-})
 </script>
-</body>
 </html>
