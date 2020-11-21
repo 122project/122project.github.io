@@ -202,9 +202,11 @@ var db=openDatabase("users","1.0","users",65535);
 function search() {
   if ($(".search").val()==""){$("#gallery img").show();}else{
   $("#gallery img").each(function(index){
-	  if ($(this).attr('alt').toLowerCase().indexOf($(".search").val().toLowerCase()) >-1 && $(this).css('display') == 'none') {
+	  if(!$(this).attr('alt')){
+		$(this).hide();
+	  }else if ($(this).attr('alt').toLowerCase().indexOf($(".search").val().toLowerCase()) >-1 && $(this).css('display') == 'none') {
 	  $(this).show();
-    } else {
+    } else if ($(this).attr('alt').toLowerCase().indexOf($(".search").val().toLowerCase()) ==-1 ) {
 	$(this).hide();
     }
   })}
