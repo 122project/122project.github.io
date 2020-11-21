@@ -1,3 +1,8 @@
+<!--
+Bookstore frontend
+Created on Oct, 2020
+@author: zacharylaw
+-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,7 +81,8 @@ body{
 }
 #sidebar{
 	z-index:-1;
-
+	overflow-y: scroll;
+	margin-bottom: 50%;
 }
 #addtocart{
 	display:none;
@@ -156,8 +162,8 @@ Your Shopping cart
 <button  style="bottom:8%;">Check out</button>
 
 </div>
-<div  id="sidebar" style="padding-top:100px;padding-right: 20px;padding-left:20px    overflow-y: scroll;position: fixed;align-items: center;align-content: center; width:300px;left:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
-<br><br><br><br>
+<div  id="sidebar" style="padding-top:100px;padding-right: 20px;padding-left:20px  ;  overflow-y: scroll;position: fixed;align-items: center;align-content: center; width:300px;left:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
+<br><br><br>
 <button onclick="w3_close()">Close &times;</button>
 <br>
 <img id="sideimg" src="9789887897248.png" style="width: 90%;  margin-left: auto;margin-right: auto;display: block;">
@@ -184,7 +190,7 @@ Your Shopping cart
 <br>
 <td><a id="publisher">-</a></td>
 <button id="addtocart" onclick="addcart()" style="display: none;">Add to Shopping Cart</button>
-<br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 </div>
 </div>
 <div id="gallery">
