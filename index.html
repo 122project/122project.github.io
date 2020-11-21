@@ -237,15 +237,16 @@ if($("#pswd").val()==''&&$("#cpswd").val()==''&&$("#createemail").val()==''){
 }else{
 	var email=$("#createemail").val();
 var pswd=$("#pswd").val();
-if ($("gender").val()){
-var gender=$("gender").val();
+if ($("#gender").val()){
+var gender=$("#gender").val();
 }else{var gender='';}
-if ($("birth").val()){
-var birth=$("birth").val();
+if ($("#birth").val()){
+var birth=$("#birth").val();
 }else{var birth='';}
-if ($("address").val()){
-var address=$("address").val();
+if ($("#address").val()){
+var address=$("#address").val();
 }else{var address='';}
+
 db.transaction(function(transaction){
 transaction.executeSql("INSERT INTO users(email,pswd,gender,birth,address) VALUES(?,?,?,?,?)",[email,pswd,gender,birth,address],function(){
 console.log("New item is added successfully");
@@ -272,7 +273,7 @@ $("#displayaccount table").append('<tr><td>Email</td><td>'+callback[0]+'</td></t
 	$("#headerfav").fadeIn(300)}, 3000);
 }
 
-function loadData(email,callback,password){
+function loadData(email,callback){
 	$("#addtocart").show()
 db.transaction(function(transaction){
 if(email){var sql="SELECT * FROM users WHERE email='"+email+"'"
