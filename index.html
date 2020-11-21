@@ -74,7 +74,13 @@ body{
 	margin-left:auto;
     margin-right:auto;
 }
+#sidebar{
+	z-index:-1;
 
+}
+#addtocart{
+	display:none;
+}
 
 
 </style>
@@ -85,10 +91,10 @@ body{
 <tr>
 <td style="width: 50%;"><h1><img src="logo.png" style="width: 30px;top: 0px;"></img>Bookstore</h1></td>
 <td><input class="login" id="email" type="email" placeholder="Email"><input class="login" id="pw" type="password" placeholder="Password">
-<img id="user" src="user.png" style="width:30px"></img>
-<a id='login'></a>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="cart" src="cart.png" style="position:absolute;display: none;width: 20px;right:20%"></img>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id ="headerfav" src="fav.png" style="position: absolute; display: none;width:20px;float:right;"></img>
+<img id="user" src="user.png" style="width:30px">
+<a id='login'><br>Test</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img id="cart" src="cart.png" style="position:absolute;display: none;width: 20px;right:20%">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </td>
 </tr>
 <tr>
@@ -120,7 +126,7 @@ body{
 <br>
 <button id="createaccount">Create account</button>
 <br>
-<a id="err"></a>
+<a id="err" style="color:red;"></a>
 
 </div>
 
@@ -150,7 +156,7 @@ Your Shopping cart
 <button  style="bottom:8%;">Check out</button>
 
 </div>
-<div  id="sidebar" style="padding: 10px;    overflow-y: scroll;position: fixed;align-items: center;align-content: center; width:300px;left:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
+<div  id="sidebar" style="padding-top:100px;padding-right: 20px;padding-left:20px    overflow-y: scroll;position: fixed;align-items: center;align-content: center; width:300px;left:0px;height: 100%;background-color:rgba(47, 49, 54, 0.95);display:none;">
 <br><br><br><br>
 <button onclick="w3_close()">Close &times;</button>
 <br>
@@ -177,12 +183,8 @@ Your Shopping cart
 <a id="desciption">-</a>
 <br>
 <td><a id="publisher">-</a></td>
-
-
-<button onclick="addcart()">Add to Shopping Cart</button>
-
+<button id="addtocart" onclick="addcart()" style="display: none;">Add to Shopping Cart</button>
 <br>
-<img style="width: 7%;" src="fav.png"></img>
 </div>
 </div>
 <div id="gallery">
@@ -192,12 +194,8 @@ Your Shopping cart
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
 //email pswd gender date address
-//var users=[
-//['a@gmail.com','1','','','']
-//,['b@gmail.com','2','','','']
-//,['c@gmail.com','3','','','']
-//]
 var userinfo;
+var sum=parseFloat(0);
 var db=openDatabase("users","1.0","users",65535);
 function search() {
   if ($(".search").val()==""){$("#gallery img").show();}else{
@@ -211,12 +209,27 @@ function search() {
     }
   })}
 }
+function addcart(){
+	$("#cartbar table").append('<tr><td><img src='+$("#sideimg").attr("src")+'></td><td>'+$("#title").html()+'</td><td>'+$("#price").html()+'</td></tr>')
+	window.sum=parseFloat($("#price").html())+parseFloat(window.sum);
+	console.log(window.sum)
+	$("#sum").html('$'+window.sum);
+}
+function w3_close() {
+  document.getElementById("sidebar").style.display = "none";
+}
 $(function(){
 loadData();
-//to insert
 $("#createaccount").click(function(){
-	if ($("#pswd").val()==$("#cpswd").val()){
-var email=$("#createemail").val();
+if($("#pswd").val()==''&&$("#cpswd").val()==''&&$("#createemail").val()==''){
+	$("#err").html('Email / Password / Confirm Password not filled')
+	$("#err").delay(2000).fadeOut(300)
+	}
+	else if ($("#pswd").val()!=$("#cpswd").val()){
+	$("#err").html('Wrong Confirm Password')
+	$("#err").delay(2000).fadeOut(300)
+}else{
+	var email=$("#createemail").val();
 var pswd=$("#pswd").val();
 if ($("gender").val()){
 var gender=$("gender").val();
@@ -236,15 +249,8 @@ console.log(err.message);
 loadData($("#createemail").val(),callbacker);
 $("#create").hide();
 $("#displayaccount").show();
-	}else{
-	$("#err").html('Wrong Pswd')
-	$("#err").fadeOut(300)
 }
 })
-
-
-
-
 function callbacker(callback){
 console.log(callback);
 window.userinfo=callback;
@@ -260,12 +266,14 @@ $("#displayaccount table").append('<tr><td>Email</td><td>'+callback[0]+'</td></t
 	$("#headerfav").fadeIn(300)}, 3000);
 }
 
-function loadData(email,callback){
+function loadData(email,callback,password){
+	$("#addtocart").show()
 db.transaction(function(transaction){
 if(email){var sql="SELECT * FROM users WHERE email='"+email+"'"
 }else{var sql="SELECT * FROM users"}
 transaction.executeSql(sql,undefined,function(transaction,result){
 if(result.rows.length){
+	console.log(result);
 	var row=result.rows.item(0);
 	var email=row.email;
 	var pswd=row.pswd;
@@ -275,10 +283,19 @@ if(result.rows.length){
 	console.log(email,pswd,gender,birth,address);
 	callback([email,pswd,gender,birth,address]);
 }},function(transaction,err){
-console.log('No table found. Click on "Create Table" to create table now');
+	db.transaction(function(transaction){
+var sql="CREATE TABLE users "+
+"(email VARCHAR(100) NOT NULL PRIMARY KEY,"+
+"pswd VARCHAR(100) NOT NULL,"+
+"gender VARCHAR(6),"+
+"birth VARCHAR(10),"+
+"address VARCHAR(100))";
+transaction.executeSql(sql,undefined,function(transaction,err){
+console.log(err.message);
+},function(transaction,err){console.log(err.message);})
+});
 })})}
 
-var sum=parseFloat(0);
 //isbn title author date pulisher description price
 var libary=[
 ['9789887897248','本地生活寫作：想像與實踐','-','6/2019','香港教育大學','本書結合香港教育大學，香港浸會大學寫作課程的教材及實踐成果，箕踞學科理論及教學法分析，也有學生課業示例及導師講評，切合香港以前華語地區大、中學界的教育需要；書中收錄青年人文章，尤能反映香港新一代的生活體驗和心靈世界。'
@@ -346,18 +363,6 @@ for(i=0;i<50;i++) {
 	var rand=Math.floor(Math.random() * libary.length)
 $('#gallery').append('<img src="'+libary[rand][0]+'.png" alt="'+libary[rand][1]+'">')
 }
-
-db.transaction(function(transaction){
-var sql="CREATE TABLE users "+
-"(email VARCHAR(100) NOT NULL PRIMARY KEY AUTOINCREMENT,"+
-"pswd VARCHAR(100) NOT NULL,"+
-"gender VARCHAR(1),"+
-"birth VARCHAR(10),"+
-"address VARCHAR(100),";
-transaction.executeSql(sql,undefined,function(){},function(){})
-});
-//$("#email").val("a@gmail.com");
-//$("#pw").val("1");
 });
 $("#displayaccount button").click(function(){
 location.reload()})
@@ -372,11 +377,66 @@ $("#create").toggle();
 }
 $("#gallery").toggle();
 })
-$('.login input').keypress(async function (e) {
+$('.login').keypress(function (e) {
 if(e.which==13){
-loadData($("#createemail").val(),callbacker);
-  }
-});
+if ($("#email.login").val()==""||$("#pw.login").val()==""){
+	$("#header a").show()
+$("#header a").html('Email / Password not filled')
+$("#header a").delay(2000).fadeOut(300)
+
+}else{
+console.log("pass");
+
+db.transaction(function(transaction){
+var sql="SELECT * FROM users WHERE email='"+$("#email.login").val()+"'"
+transaction.executeSql(sql,undefined,function(transaction,result){
+	console.log(result)
+if(result.rows.length){
+	console.log(result);
+	var row=result.rows.item(0);
+	var email=row.email;
+	var pswd=row.pswd;
+	console.log(email,pswd,gender,birth,address);
+
+	if(pswd==$("#pw.login").val()){
+		var gender=row.gender;
+	var birth=row.birth;
+	var address=row.address;
+	$("#addtocart").show()
+	window.userinfo=[email,pswd,gender,birth,address];
+	callback=[email,pswd,gender,birth,address];
+$("#displayaccount table").append('<tr><td>Email</td><td>'+callback[0]+'</td></tr><tr><td>Password</td><td>'+callback[1]+
+	'</td></tr><tr><td>Gender</td><td>'+callback[2]+'</td></tr><tr><td>Birthday</td><td>'+callback[3]+
+	'</td></tr><tr><td>Address</td><td>'+callback[4]+'</td></tr>');
+	$("#email").hide();
+	$("#pw").hide();
+	$("#login").html("Login success").fadeIn(300).delay(1000).fadeOut(300);
+	setTimeout(function(){ $("#login").html(callback[0]);
+	$("#login").fadeIn(300);
+	$('#cart').fadeIn(300);
+	$("#headerfav").fadeIn(300)}, 3000);
+	}else{
+		$("#header a").show()
+$("#header a").html('<br>Wrong Email / Password')
+$("#header a").delay(2000).fadeOut(300)
+	}
+}else{
+	$("#header a").show()
+$("#header a").html('<br>Wrong Email / Password')
+$("#header a").delay(2000).fadeOut(300)
+}
+},function(transaction,err){
+	db.transaction(function(transaction){
+var sql="CREATE TABLE users "+
+"(email VARCHAR(100) NOT NULL PRIMARY KEY,"+
+"pswd VARCHAR(100) NOT NULL,"+
+"gender VARCHAR(6),"+
+"birth VARCHAR(10),"+
+"address VARCHAR(100))";
+transaction.executeSql(sql,undefined,function(transaction,err){
+console.log(err.message);
+},function(transaction,err){console.log(err.message);})
+})})})}}});
 $(window).scroll(function () {
 var i=0
 if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
@@ -386,7 +446,8 @@ $('#gallery').append('<img src="'+libary[Math.floor(Math.random() * libary.lengt
 }
 });
 $('body').on('click','#gallery img',function(){
-	document.getElementById("sidebar").style.display = "block";
+	$("#sidebar").show()
+	if(!userinfo){$("#addtocart").hide()}
 	$("#sideimg").attr("src",$(this).attr("src"));
 	$("#title").html('-')
 			$("#author").html('-')
@@ -405,15 +466,6 @@ $('body').on('click','#gallery img',function(){
 	}
 	}
 })
-function addcart(){
-	$("#cartbar table").append('<tr><td><img src='+$("#sideimg").attr("src")+'></td><td>'+$("#title").html()+'</td><td>'+$("#price").html()+'</td></tr>')
-	sum=parseFloat($("#price").html())+parseFloat(sum);
-	$("#sum").html('$'+sum);
-}
-
-function w3_close() {
-  document.getElementById("sidebar").style.display = "none";
-}
 })
 </script>
 </html>
